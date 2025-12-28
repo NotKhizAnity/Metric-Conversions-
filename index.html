@@ -9,7 +9,6 @@
             --bg: #f4f7fa;
             --container-bg: #ffffff;
             --text: #333333;
-            --heading: #2c3e50;
             --label: #34495e;
             --input-bg: #f9f9f9;
             --input-border: #ddd;
@@ -20,23 +19,8 @@
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             --nav-bg: #2c3e50;
             --nav-hover: #3498db;
-        }
-
-        [data-theme="dark"] {
-            --bg: #121212;
-            --container-bg: #1e1e1e;
-            --text: #e0e0e0;
-            --heading: #ecf0f1;
-            --label: #b0b0b0;
-            --input-bg: #2d2d2d;
-            --input-border: #444;
-            --primary: #5faee3;
-            --primary-hover: #4a90c9;
-            --result-bg: #263238;
-            --result-border: #5faee3;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --nav-bg: #1a1a1a;
-            --nav-hover: #5faee3;
+            --danger: #e74d3c;
+            --danger-hover: #c0392b;
         }
 
         body {
@@ -58,24 +42,6 @@
         h1 {
             color: white;
             margin: 0;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 2px solid white;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover {
-            background: white;
-            color: var(--nav-bg);
         }
 
         nav {
@@ -159,6 +125,12 @@
             border-color: var(--primary);
         }
 
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         button {
             padding: 12px 20px;
             background: var(--primary);
@@ -167,10 +139,19 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.3s;
+            flex: 1;
         }
 
         button:hover {
             background: var(--primary-hover);
+        }
+
+        button.clear-btn {
+            background: var(--danger);
+        }
+
+        button.clear-btn:hover {
+            background: var(--danger-hover);
         }
 
         .result {
@@ -226,7 +207,6 @@
 <body>
     <header>
         <h1>Aptech Metric Conversions</h1>
-        <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
     </header>
 
     <nav>
@@ -266,7 +246,10 @@
                         <label for="lengthTo">To</label>
                         <select id="lengthTo"></select>
                     </div>
-                    <button onclick="convert('length')">Convert</button>
+                    <div class="button-group">
+                        <button onclick="convert('length')">Convert</button>
+                        <button class="clear-btn" onclick="clearFields('length')">Clear</button>
+                    </div>
                     <div id="lengthResult" class="result"></div>
                 </div>
                 <div>
@@ -294,7 +277,10 @@
                         <label for="areaTo">To</label>
                         <select id="areaTo"></select>
                     </div>
-                    <button onclick="convert('area')">Convert</button>
+                    <div class="button-group">
+                        <button onclick="convert('area')">Convert</button>
+                        <button class="clear-btn" onclick="clearFields('area')">Clear</button>
+                    </div>
                     <div id="areaResult" class="result"></div>
                 </div>
                 <div>
@@ -322,7 +308,10 @@
                         <label for="volumeTo">To</label>
                         <select id="volumeTo"></select>
                     </div>
-                    <button onclick="convert('volume')">Convert</button>
+                    <div class="button-group">
+                        <button onclick="convert('volume')">Convert</button>
+                        <button class="clear-btn" onclick="clearFields('volume')">Clear</button>
+                    </div>
                     <div id="volumeResult" class="result"></div>
                 </div>
                 <div>
@@ -350,7 +339,10 @@
                         <label for="massTo">To</label>
                         <select id="massTo"></select>
                     </div>
-                    <button onclick="convert('mass')">Convert</button>
+                    <div class="button-group">
+                        <button onclick="convert('mass')">Convert</button>
+                        <button class="clear-btn" onclick="clearFields('mass')">Clear</button>
+                    </div>
                     <div id="massResult" class="result"></div>
                 </div>
                 <div>
@@ -384,7 +376,10 @@
                             <option value="fahrenheit">Fahrenheit</option>
                         </select>
                     </div>
-                    <button onclick="convert('temperature')">Convert</button>
+                    <div class="button-group">
+                        <button onclick="convert('temperature')">Convert</button>
+                        <button class="clear-btn" onclick="clearFields('temperature')">Clear</button>
+                    </div>
                     <div id="tempResult" class="result"></div>
                 </div>
                 <div>
@@ -412,7 +407,10 @@
                         <label for="currencyTo">To</label>
                         <select id="currencyTo"></select>
                     </div>
-                    <button onclick="convert('currency')">Convert</button>
+                    <div class="button-group">
+                        <button onclick="convert('currency')">Convert</button>
+                        <button class="clear-btn" onclick="clearFields('currency')">Clear</button>
+                    </div>
                     <div id="currencyResult" class="result"></div>
                 </div>
                 <div>
@@ -638,6 +636,20 @@
             resultDiv.style.display = 'block';
         }
 
+        // Clear fields function
+        function clearFields(category) {
+            if (category === 'temperature') {
+                document.getElementById('tempValue').value = '';
+                document.getElementById('tempResult').style.display = 'none';
+            } else if (category === 'currency') {
+                document.getElementById('currencyValue').value = '';
+                document.getElementById('currencyResult').style.display = 'none';
+            } else {
+                document.getElementById(category + 'Value').value = '';
+                document.getElementById(category + 'Result').style.display = 'none';
+            }
+        }
+
         async function convertCurrency() {
             const value = parseFloat(document.getElementById('currencyValue').value);
             const from = document.getElementById('currencyFrom').value;
@@ -663,26 +675,6 @@
             }
             resultDiv.style.display = 'block';
         }
-
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeToggle.textContent = '☀️ Light Mode';
-        }
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                document.documentElement.removeAttribute('data-theme');
-                themeToggle.textContent = '🌙 Dark Mode';
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeToggle.textContent = '☀️ Light Mode';
-                localStorage.setItem('theme', 'dark');
-            }
-        });
 
         // FAQ toggle
         document.querySelectorAll('.faq h3').forEach(h => {
